@@ -6,8 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "watch": "npx tsc -w",
-    "start": "npx tsc && node dist/src/index.js",
-    "dev": "npx tsc -w && nodemon dist/src/index.js"
+    "start": "npx tsc && cross-env NODE_ENV=production node dist/src/index.js",
+    "start:dev": "npx tsc && cross-env NODE_ENV=development node dist/src/index.js",
+    "dev": "npx tsc -w && cross-env NODE_ENV=development nodemon dist/src/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,9 +27,11 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.7",
     "nodemon": "^3.1.9",
+    "prisma": "^6.2.1",
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@prisma/client": "^6.2.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

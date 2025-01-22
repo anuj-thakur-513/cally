@@ -9,8 +9,10 @@ const errorHandler: ErrorRequestHandler = (
 ) => {
   err.message = err.message || "Server Error";
   err.statusCode = err.statusCode || 500;
-  // logging for dev
-  console.error(err);
+
+  if (process.env.NODE_ENV === "development") {
+    console.error(err);
+  }
 
   res.status(err.statusCode).json({
     success: false,
