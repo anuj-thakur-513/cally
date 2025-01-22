@@ -17,6 +17,8 @@ model User {
   id               Int        @id @unique @default(autoincrement())
   email            String     @unique
   googleId         String     @unique @map("google_id")
+  name             String
+  profilePicture   String     @map("profile_picture")
   createdAt        DateTime   @default(now()) @map("created_at")
   updatedAt        DateTime   @updatedAt @map("updated_at")
   sentMeetings     Meetings[] @relation("sentMeetings")
