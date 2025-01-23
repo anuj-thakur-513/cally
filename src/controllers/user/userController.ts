@@ -39,8 +39,6 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response, next: 
       },
     });
   }
-  // TODO: remove this log
-  console.log(user);
   const accessToken = generateToken(user.id, user.email);
   res
     .status(200)
@@ -57,4 +55,15 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response, next: 
     );
 });
 
-export { handleGoogleAuth };
+const handleAuthCheck = async (req: Request, res: Response) => {
+  res.status(200).json(
+    new ApiResponse(
+      {
+        isAuthenticated: true,
+      },
+      "Authenticated"
+    )
+  );
+};
+
+export { handleGoogleAuth, handleAuthCheck };

@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "dist/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "watch": "npx tsc -w",
     "start": "npx tsc && cross-env NODE_ENV=production node dist/src/index.js",
     "start:dev": "npx tsc && cross-env NODE_ENV=development node dist/src/index.js",
-    "dev": "npx tsc -w && cross-env NODE_ENV=development nodemon dist/src/index.js"
+    "dev": "cross-env NODE_ENV=development nodemon dist/src/index.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +27,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.7",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9",
     "prisma": "^6.2.1",
     "typescript": "^5.7.3"
