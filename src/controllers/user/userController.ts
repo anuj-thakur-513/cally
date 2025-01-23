@@ -39,7 +39,8 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response, next: 
       },
     });
   }
-
+  // TODO: remove this log
+  console.log(user);
   const accessToken = generateToken(user.id, user.email);
   res
     .status(200)

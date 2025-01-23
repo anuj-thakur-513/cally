@@ -38,4 +38,6 @@ model Meetings {
   accepted    Boolean  @default(false)
   meetLink    String   @default("") @map("meet_link")
   time        DateTime @default(now())
+
+  @@map("meetings")
 }
