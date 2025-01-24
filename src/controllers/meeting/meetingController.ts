@@ -119,4 +119,39 @@ const handleAcceptMeeting = asyncHandler(
   }
 );
 
-export { handleScheduleMeeting, handleAcceptMeeting };
+const handleGetUpcomingMeetings = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (!user) {
+      return next(new AppError(401, "Unauthorized"));
+    }
+
+    const meetings = await prisma.meetings.findMany({
+      where: {
+        OR: [
+          {
+            senderId: user.id,
+          },
+          {
+            receiverId: user.id,
+          },
+        ],
+        time: {
+          gt: new Date(),
+        },
+      },
+      include: {
+        sender: {
+          select: {
+            name: true,
+            profilePicture: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(new ApiResponse(meetings, "Upcoming Meetings sent successfully"));
+  }
+);
+
+export { handleScheduleMeeting, handleAcceptMeeting, handleGetUpcomingMeetings };
