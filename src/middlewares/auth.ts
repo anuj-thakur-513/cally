@@ -42,6 +42,8 @@ const verifyToken = asyncHandler(async (req: Request, res: Response, next: NextF
         ...AUTH_COOKIE_OPTIONS,
         maxAge: 60 * 60 * 1000,
       });
+    } else {
+      return next(new AppError(401, "Unauthorized"));
     }
   }
 

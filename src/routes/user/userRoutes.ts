@@ -11,6 +11,8 @@ const userRouter = Router();
 
 userRouter.post("/googleAuth", rateLimiter, handleGoogleAuth);
 userRouter.post("/googleRedirect", handleGoogleRedirect);
+userRouter.post("/logout");
+
 userRouter.get("/isAuthenticated", verifyToken, handleAuthCheck);
 
 export default userRouter;

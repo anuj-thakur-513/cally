@@ -4,6 +4,7 @@ import {
   handleAcceptMeeting,
   handleGetPastMeetings,
   handleGetUpcomingMeetings,
+  handleRejectMeeting,
   handleScheduleMeeting,
 } from "../../controllers/meeting/meetingController";
 
@@ -11,8 +12,8 @@ const meetingRouter = Router();
 
 meetingRouter.post("/schedule/:receiverId", [verifyToken, handleScheduleMeeting]);
 meetingRouter.post("/accept/:meetingId", [verifyToken, handleAcceptMeeting]);
+meetingRouter.post("/reject/:meetingId", [verifyToken, handleRejectMeeting]);
 
-// TODO: reject invitation
 meetingRouter.get("/upcoming", [verifyToken, handleGetUpcomingMeetings]);
 meetingRouter.get("/past", [verifyToken, handleGetPastMeetings]);
 

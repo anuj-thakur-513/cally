@@ -88,4 +88,12 @@ const handleAuthCheck = async (req: Request, res: Response) => {
   );
 };
 
-export { handleGoogleAuth, handleGoogleRedirect, handleAuthCheck };
+const handleLogout = async (req: Request, res: Response) => {
+  res
+    .status(200)
+    .clearCookie("accessToken")
+    .clearCookie("googleToken")
+    .json(new ApiResponse(null, "Logged out"));
+};
+
+export { handleGoogleAuth, handleGoogleRedirect, handleAuthCheck, handleLogout };
