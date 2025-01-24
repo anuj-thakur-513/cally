@@ -1,3 +1,4 @@
+import axios from "axios";
 import { google } from "googleapis";
 import keys from "../config/keys";
 
@@ -42,7 +43,19 @@ async function verifyGoogleToken(token: string): Promise<any> {
     };
   } catch (error) {
     console.log(error);
-    throw new Error("Unable to fetch user profile");
+    throw error;
+  }
+}
+
+async function isGoogleAccessTokenValid(accessToken: string | null | undefined): Promise<boolean> {
+  try {
+    if (!accessToken || accessToken === "") return false;
+    const response = await axios.get(
+      `https://oauth2.googleapis.com/tokeninfo?access_token=${accessToken}`
+    );
+    return true;
+  } catch (err) {
+    return false;
   }
 }
 
@@ -53,8 +66,8 @@ async function refreshGoogleTokens(refreshToken: string): Promise<string> {
     return credentials.access_token as string;
   } catch (error) {
     console.log(error);
-    throw new Error("Unable to regenerate tokens");
+    throw error;
   }
 }
 
-export { generateAuthUrl, verifyGoogleToken, refreshGoogleTokens };
+export { generateAuthUrl, verifyGoogleToken, isGoogleAccessTokenValid, refreshGoogleTokens };

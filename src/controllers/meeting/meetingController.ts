@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import asyncHandler from "../../utils/asyncHandler";
 import Db from "../../services/Db";
 import AppError from "../../core/AppError";
@@ -78,17 +78,44 @@ const handleAcceptMeeting = asyncHandler(
     if (!meeting) {
       return next(new AppError(404, "Meeting not found"));
     }
-    console.log(meeting);
+
+    const attendees = [
+      {
+        email: meeting.sender.email,
+        name: meeting.sender.name,
+        responseStatus: "needsAction",
+      },
+      {
+        email: user.email,
+        name: user.name,
+        responseStatus: "accepted",
+      },
+    ];
+
     const meet = await createMeet(
       meeting.title,
       meeting.description,
       meeting.time,
-      meeting.durationMinutes
+      meeting.durationMinutes,
+      user.googleAccessToken,
+      attendees
     );
 
-    console.log(meet);
+    const updatedMeeting = await prisma.meetings.update({
+      where: {
+        id: parseInt(meetingId),
+      },
+      data: {
+        accepted: true,
+        meetLink: meet as string,
+      },
+      omit: {
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-    res.status(200).json(new ApiResponse(null, "Meeting accepted successfully"));
+    res.status(200).json(new ApiResponse(updatedMeeting, "Meeting accepted successfully"));
   }
 );
 

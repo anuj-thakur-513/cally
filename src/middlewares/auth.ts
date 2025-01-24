@@ -4,7 +4,7 @@ import asyncHandler from "../utils/asyncHandler";
 import AppError from "../core/AppError";
 import keys from "../config/keys";
 import Db from "../services/Db";
-import { refreshGoogleTokens } from "../utils/googleOAuth";
+import { refreshGoogleTokens, isGoogleAccessTokenValid } from "../utils/googleOAuth";
 import { AUTH_COOKIE_OPTIONS } from "../config/cookiesConfig";
 
 const prisma = Db.getPrismaClient();
@@ -34,7 +34,8 @@ const verifyToken = asyncHandler(async (req: Request, res: Response, next: NextF
   }
 
   let googleAccessToken = req.cookies?.googleToken || req.header("Google-Token")?.split(" ")[1];
-  if (!googleAccessToken) {
+  const isGoogleTokenValid = await isGoogleAccessTokenValid(googleAccessToken);
+  if (!isGoogleTokenValid) {
     googleAccessToken = await refreshGoogleTokens(user.googleRefreshToken);
     if (googleAccessToken) {
       res.cookie("googleToken", googleAccessToken, {
