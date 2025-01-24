@@ -4,6 +4,7 @@ import {
   handleAuthCheck,
   handleGoogleAuth,
   handleGoogleRedirect,
+  handleLogout,
 } from "../../controllers/user/userController";
 import verifyToken from "../../middlewares/auth";
 
@@ -11,7 +12,7 @@ const userRouter = Router();
 
 userRouter.post("/googleAuth", rateLimiter, handleGoogleAuth);
 userRouter.post("/googleRedirect", handleGoogleRedirect);
-userRouter.post("/logout");
+userRouter.post("/logout", handleLogout);
 
 userRouter.get("/isAuthenticated", verifyToken, handleAuthCheck);
 
