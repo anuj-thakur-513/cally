@@ -9,6 +9,7 @@ export default {
   googleOAuth: {
     clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+    authRedirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
     calendarApiKey: process.env.GOOGLE_CALENDAR_API_KEY,
   },
 };

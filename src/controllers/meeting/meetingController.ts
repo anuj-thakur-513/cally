@@ -3,6 +3,7 @@ import asyncHandler from "../../utils/asyncHandler";
 import Db from "../../services/Db";
 import AppError from "../../core/AppError";
 import ApiResponse from "../../core/ApiResponse";
+import createMeet from "../../utils/createMeet";
 
 const prisma = Db.getPrismaClient();
 
@@ -57,4 +58,38 @@ const handleScheduleMeeting = asyncHandler(
   }
 );
 
-export { handleScheduleMeeting };
+const handleAcceptMeeting = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (!user) {
+      return next(new AppError(401, "Unauthorized"));
+    }
+    const { meetingId } = req.params;
+    const meeting = await prisma.meetings.findUnique({
+      where: {
+        id: parseInt(meetingId),
+        receiverId: user?.id,
+      },
+      include: {
+        sender: true,
+      },
+    });
+
+    if (!meeting) {
+      return next(new AppError(404, "Meeting not found"));
+    }
+    console.log(meeting);
+    const meet = await createMeet(
+      meeting.title,
+      meeting.description,
+      meeting.time,
+      meeting.durationMinutes
+    );
+
+    console.log(meet);
+
+    res.status(200).json(new ApiResponse(null, "Meeting accepted successfully"));
+  }
+);
+
+export { handleScheduleMeeting, handleAcceptMeeting };

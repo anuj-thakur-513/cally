@@ -14,32 +14,34 @@ datasource db {
 }
 
 model User {
-  id               Int        @id @unique @default(autoincrement())
-  email            String     @unique
-  googleId         String     @unique @map("google_id")
-  name             String
-  profilePicture   String     @map("profile_picture")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
-  sentMeetings     Meetings[] @relation("sentMeetings")
-  receivedMeetings Meetings[] @relation("receivedMeetings")
+  id                 Int        @id @unique @default(autoincrement())
+  email              String     @unique
+  googleId           String     @unique @map("google_id")
+  googleRefreshToken String     @map("google_refresh_token")
+  name               String
+  profilePicture     String     @map("profile_picture")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+  sentMeetings       Meetings[] @relation("sentMeetings")
+  receivedMeetings   Meetings[] @relation("receivedMeetings")
 
   @@map("users")
 }
 
 model Meetings {
-  id          Int      @id @unique @default(autoincrement())
-  sender      User     @relation(name: "sentMeetings", fields: [senderId], references: [id])
-  senderId    Int      @map("sender_id")
-  receiver    User     @relation(name: "receivedMeetings", fields: [receiverId], references: [id])
-  receiverId  Int      @map("receiver_id")
-  title       String
-  description String
-  accepted    Boolean  @default(false)
-  meetLink    String   @default("") @map("meet_link")
-  time        DateTime @default(now())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id              Int      @id @unique @default(autoincrement())
+  sender          User     @relation(name: "sentMeetings", fields: [senderId], references: [id])
+  senderId        Int      @map("sender_id")
+  receiver        User     @relation(name: "receivedMeetings", fields: [receiverId], references: [id])
+  receiverId      Int      @map("receiver_id")
+  title           String
+  description     String
+  accepted        Boolean  @default(false)
+  meetLink        String   @default("") @map("meet_link")
+  time            DateTime @default(now())
+  durationMinutes Int      @default(30) @map("duration_minutes")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("meetings")
 }
