@@ -10,9 +10,14 @@ const SCOPES = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/userinfo.profile",
 ];
-const client = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI);
-function generateAuthUrl() {
-  const authUrl = client.generateAuthUrl({
+const oAuth2Client = new google.auth.OAuth2(
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI
+);
+
+function generateAuthUrl(): string {
+  const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
     prompt: "consent",
@@ -23,10 +28,10 @@ function generateAuthUrl() {
 
 async function verifyGoogleToken(token: string): Promise<any> {
   try {
-    const { tokens } = await client.getToken(token);
-    client.setCredentials(tokens);
+    const { tokens } = await oAuth2Client.getToken(token);
+    oAuth2Client.setCredentials(tokens);
 
-    const oauth2 = google.oauth2({ version: "v2", auth: client });
+    const oauth2 = google.oauth2({ version: "v2", auth: oAuth2Client });
     const userInfo = await oauth2.userinfo.get();
     const data = userInfo.data;
 
@@ -37,8 +42,19 @@ async function verifyGoogleToken(token: string): Promise<any> {
     };
   } catch (error) {
     console.log(error);
-    return { error: "Invalid User detected" };
+    throw new Error("Unable to fetch user profile");
   }
 }
 
-export { generateAuthUrl, verifyGoogleToken };
+async function refreshGoogleTokens(refreshToken: string): Promise<string> {
+  try {
+    oAuth2Client.setCredentials({ refresh_token: refreshToken });
+    const { credentials } = await oAuth2Client.refreshAccessToken();
+    return credentials.access_token as string;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Unable to regenerate tokens");
+  }
+}
+
+export { generateAuthUrl, verifyGoogleToken, refreshGoogleTokens };

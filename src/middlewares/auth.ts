@@ -4,6 +4,8 @@ import asyncHandler from "../utils/asyncHandler";
 import AppError from "../core/AppError";
 import keys from "../config/keys";
 import Db from "../services/Db";
+import { refreshGoogleTokens } from "../utils/googleOAuth";
+import { AUTH_COOKIE_OPTIONS } from "../config/cookiesConfig";
 
 const prisma = Db.getPrismaClient();
 
@@ -23,6 +25,7 @@ const verifyToken = asyncHandler(async (req: Request, res: Response, next: NextF
       email: true,
       name: true,
       googleId: true,
+      googleRefreshToken: true,
     },
   });
 
@@ -30,7 +33,18 @@ const verifyToken = asyncHandler(async (req: Request, res: Response, next: NextF
     return next(new AppError(401, "Unauthorized"));
   }
 
-  req.user = user;
+  let googleAccessToken = req.cookies?.googleToken || req.header("Google-Token")?.split(" ")[1];
+  if (!googleAccessToken) {
+    googleAccessToken = await refreshGoogleTokens(user.googleRefreshToken);
+    if (googleAccessToken) {
+      res.cookie("googleToken", googleAccessToken, {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: 60 * 60 * 1000,
+      });
+    }
+  }
+
+  req.user = { ...user, googleAccessToken };
   next();
 });
 

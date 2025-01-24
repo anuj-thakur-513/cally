@@ -3,4 +3,6 @@ export interface IUser {
   email: string;
   googleId: string;
   name: string;
+  googleRefreshToken: string;
+  googleAccessToken: string;
 }

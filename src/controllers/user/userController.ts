@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../../utils/asyncHandler";
 import AppError from "../../core/AppError";
-import { generateAuthUrl, verifyGoogleToken } from "../../utils/verifyGoogleToken";
+import { generateAuthUrl, verifyGoogleToken } from "../../utils/googleOAuth";
 import generateToken from "../../utils/generateToken";
 import ApiResponse from "../../core/ApiResponse";
 import { AUTH_COOKIE_OPTIONS } from "../../config/cookiesConfig";
@@ -55,8 +55,11 @@ const handleGoogleRedirect = asyncHandler(
 
     res
       .status(200)
-      .cookie("accessToken", accessToken, AUTH_COOKIE_OPTIONS)
-      .cookie("googleToken", googleAccessToken, AUTH_COOKIE_OPTIONS)
+      .cookie("accessToken", accessToken, {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      .cookie("googleToken", googleAccessToken, { ...AUTH_COOKIE_OPTIONS, maxAge: 60 * 60 * 1000 })
       .json(
         new ApiResponse(
           {
