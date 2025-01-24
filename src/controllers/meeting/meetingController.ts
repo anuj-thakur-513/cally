@@ -108,6 +108,7 @@ const handleAcceptMeeting = asyncHandler(
       data: {
         accepted: true,
         meetLink: meet as string,
+        responded: true,
       },
       omit: {
         createdAt: true,
@@ -116,6 +117,42 @@ const handleAcceptMeeting = asyncHandler(
     });
 
     res.status(200).json(new ApiResponse(updatedMeeting, "Meeting accepted successfully"));
+  }
+);
+
+const handleRejectMeeting = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (!user) {
+      return next(new AppError(401, "Unauthorized"));
+    }
+    const { meetingId } = req.params;
+    const meeting = await prisma.meetings.findUnique({
+      where: {
+        id: parseInt(meetingId),
+        receiverId: user?.id,
+      },
+    });
+
+    if (!meeting) {
+      return next(new AppError(404, "Meeting not found"));
+    }
+
+    const updatedMeeting = await prisma.meetings.update({
+      where: {
+        id: parseInt(meetingId),
+      },
+      data: {
+        accepted: false,
+        responded: true,
+      },
+      omit: {
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.status(200).json(new ApiResponse(updatedMeeting, "Meeting rejected successfully"));
   }
 );
 
@@ -196,6 +233,7 @@ const handleGetPastMeetings = asyncHandler(
 export {
   handleScheduleMeeting,
   handleAcceptMeeting,
+  handleRejectMeeting,
   handleGetUpcomingMeetings,
   handleGetPastMeetings,
 };

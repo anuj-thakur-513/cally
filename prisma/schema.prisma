@@ -37,6 +37,7 @@ model Meetings {
   title           String
   description     String
   accepted        Boolean  @default(false)
+  responded       Boolean  @default(false)
   meetLink        String   @default("") @map("meet_link")
   time            DateTime @default(now())
   durationMinutes Int      @default(30) @map("duration_minutes")
