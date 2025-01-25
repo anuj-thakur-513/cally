@@ -35,6 +35,18 @@ const handleScheduleMeeting = asyncHandler(
       return next(new AppError(404, "Receiver not found"));
     }
 
+    const existingMeeting = await prisma.meetings.findMany({
+      where: {
+        time: time,
+        senderId: user.id,
+        receiverId: parseInt(receiverId),
+      },
+    });
+
+    if (existingMeeting.length > 0) {
+      return next(new AppError(400, "Meeting request already sent to the user for this time"));
+    }
+
     const meeting = await prisma.meetings.create({
       data: {
         senderId: user?.id,
