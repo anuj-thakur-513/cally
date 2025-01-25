@@ -12,4 +12,9 @@ export default {
     authRedirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
     calendarApiKey: process.env.GOOGLE_CALENDAR_API_KEY,
   },
+  aws: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+  },
 };

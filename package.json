@@ -33,6 +33,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.734.0",
     "@google-apps/meet": "^0.3.0",
     "@google-cloud/local-auth": "^2.1.0",
     "@prisma/client": "^6.2.1",

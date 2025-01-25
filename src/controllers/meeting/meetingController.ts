@@ -4,6 +4,7 @@ import Db from "../../services/Db";
 import AppError from "../../core/AppError";
 import ApiResponse from "../../core/ApiResponse";
 import createMeet from "../../utils/createMeet";
+import invokeEmailer from "../../utils/invokeEmailer";
 
 const prisma = Db.getPrismaClient();
 
@@ -46,13 +47,20 @@ const handleScheduleMeeting = asyncHandler(
         createdAt: true,
         updatedAt: true,
       },
+      include: {
+        receiver: {
+          select: {
+            email: true,
+          },
+        },
+      },
     });
 
     if (!meeting) {
       return next(new AppError(500, "Error in sending meeting request"));
     }
 
-    // TODO: call microservice to send email to the receiver
+    await invokeEmailer(meeting.receiver.email, user.email, user.name);
 
     res.status(200).json(new ApiResponse(meeting, "Meeting request sent successfully"));
   }
