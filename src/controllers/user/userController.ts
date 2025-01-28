@@ -96,4 +96,29 @@ const handleLogout = async (req: Request, res: Response) => {
     .json(new ApiResponse(null, "Logged out"));
 };
 
-export { handleGoogleAuth, handleGoogleRedirect, handleAuthCheck, handleLogout };
+const handleGetUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user;
+  if (!user) {
+    return next(new AppError(401, "Unauthorized"));
+  }
+
+  const { userId } = req.params;
+  const userDetails = await prisma.user.findUnique({
+    where: {
+      id: parseInt(userId),
+    },
+    select: {
+      id: true,
+      name: true,
+      profilePicture: true,
+    },
+  });
+
+  if (!userDetails) {
+    return next(new AppError(404, "User not found"));
+  }
+
+  res.status(200).json(new ApiResponse(userDetails, "user details sent succesfully"));
+});
+
+export { handleGoogleAuth, handleGoogleRedirect, handleAuthCheck, handleLogout, handleGetUser };

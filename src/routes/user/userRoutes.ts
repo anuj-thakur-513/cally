@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimiter from "../../middlewares/rateLimiter";
 import {
   handleAuthCheck,
+  handleGetUser,
   handleGoogleAuth,
   handleGoogleRedirect,
   handleLogout,
@@ -14,6 +15,7 @@ userRouter.post("/googleAuth", rateLimiter, handleGoogleAuth);
 userRouter.post("/googleRedirect", handleGoogleRedirect);
 userRouter.post("/logout", handleLogout);
 
+userRouter.get("/receiver/:userId", verifyToken, handleGetUser);
 userRouter.get("/isAuthenticated", verifyToken, handleAuthCheck);
 
 export default userRouter;
