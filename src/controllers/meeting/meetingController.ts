@@ -204,6 +204,12 @@ const handleGetUpcomingMeetings = asyncHandler(
             profilePicture: true,
           },
         },
+        receiver: {
+          select: {
+            name: true,
+            profilePicture: true,
+          },
+        },
       },
     });
 
@@ -234,6 +240,12 @@ const handleGetPastMeetings = asyncHandler(
       },
       include: {
         sender: {
+          select: {
+            name: true,
+            profilePicture: true,
+          },
+        },
+        receiver: {
           select: {
             name: true,
             profilePicture: true,
