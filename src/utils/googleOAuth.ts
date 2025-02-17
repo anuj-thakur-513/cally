@@ -4,7 +4,7 @@ import keys from "../config/keys";
 
 const GOOGLE_CLIENT_ID = keys.googleOAuth.clientId;
 const GOOGLE_CLIENT_SECRET = keys.googleOAuth.clientSecret;
-const GOOGLE_REDIRECT_URI = keys.googleOAuth.authRedirectUri; // TODO: update this
+const GOOGLE_REDIRECT_URI = keys.googleOAuth.authRedirectUri;
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar",
   "https://www.googleapis.com/auth/calendar.events",
@@ -18,7 +18,6 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 
 function generateAuthUrl(): string {
-  console.log(GOOGLE_REDIRECT_URI);
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
