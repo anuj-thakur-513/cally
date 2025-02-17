@@ -1,9 +1,8 @@
+import path from "path";
 import { configDotenv } from "dotenv";
-configDotenv({
-  path: "../.env",
-});
+configDotenv();
 
-console.log(process.env.AWS_REGION);
+console.log("path to .env", path.resolve(process.cwd(), ".env"));
 import app from "./server";
 
 const PORT = process.env.PORT || 8000;
