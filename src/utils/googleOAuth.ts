@@ -18,6 +18,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 
 function generateAuthUrl(): string {
+  console.log(GOOGLE_REDIRECT_URI);
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,

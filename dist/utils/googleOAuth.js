@@ -30,6 +30,7 @@ const SCOPES = [
 ];
 const oAuth2Client = new googleapis_1.google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI);
 function generateAuthUrl() {
+    console.log(GOOGLE_REDIRECT_URI);
     const authUrl = oAuth2Client.generateAuthUrl({
         access_type: "offline",
         scope: SCOPES,
