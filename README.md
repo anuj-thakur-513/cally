@@ -32,3 +32,12 @@ Start the server
 ```bash
   npm run start:dev
 ```
+
+## Contributing to Cally
+
+- Fork the repo
+- Create a new branch for your feature or bug fix
+- Make your changes
+- Commit your changes
+- Push your changes to your fork
+- Create a pull request
