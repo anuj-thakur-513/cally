@@ -11,18 +11,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << EOF
+      # - name: Deploy to EC2
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << EOF
+      #       export DOPPLER_TOKEN=${{ secrets.DOPPLER_ACCESS_KEY }}
+      #       cd ~/cally
+      #       git pull
+      #       git reset --hard origin/main
+      #       doppler secrets download --no-file --format env > .env
+      #       docker-compose up -d --build
+      #     EOF
+      - name: SSH into Server & Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: "ubuntu"
+          key: ${{ secrets.SSH_KEY }}
+          script: |
             export DOPPLER_TOKEN=${{ secrets.DOPPLER_ACCESS_KEY }}
             cd ~/cally
             git pull
             git reset --hard origin/main
             doppler secrets download --no-file --format env > .env
             docker-compose up -d --build
-          EOF
