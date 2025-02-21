@@ -23,6 +23,6 @@ jobs:
             cd ~/cally
             git pull
             git reset --hard origin/main
-            doppler secrets download --format=env --out .env
+            doppler secrets download --no-file --format env > .env
             docker-compose up -d --build
           EOF
