@@ -2,7 +2,7 @@ services:
   cally-backend:
     build: .
     ports:
-      - 5000:5000
+      - 8000:8000
     env_file:
       - .env
     restart: unless-stopped
