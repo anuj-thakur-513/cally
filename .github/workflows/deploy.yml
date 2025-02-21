@@ -16,10 +16,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: SSH into Server & Deploy
+      - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << 'EOF'
-            export DOPPLER_TOKEN=${{ secrets.DOPPLE_ACCESS_KEY }}
+            export DOPPLER_TOKEN=${{ secrets.DOPPLER_ACCESS_KEY }}
             cd ~/cally
             git pull
             git reset --hard origin/main
